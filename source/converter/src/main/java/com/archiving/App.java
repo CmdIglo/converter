@@ -60,34 +60,12 @@ public class App {
     private static void readFiles(ArrayList<File> files) {
 
         ArrayList<ArrayList<Product>> products = new ArrayList<ArrayList<Product>>();
-
+        Parser fileparser = new Parser(); 
         for(File file : files) {
-            products.add(getContents(file));
+            fileparser.setFile(file);
+            products.add(fileparser.getContents());
         }
 
     }
 
-    /**
-     * Get the content of a file
-     * @param file  File to be read
-     * @return  List of products listed in the file
-     */
-    private static ArrayList<Product> getContents(File file) {
-
-        ArrayList<Product> products = new ArrayList<Product>();
-
-        try {
-            Scanner filescanner = new Scanner(file);
-            while (filescanner.hasNextLine()) {
-                String data = filescanner.nextLine();
-                System.out.println(data);
-            }
-            filescanner.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return products;
-
-    } 
 }
