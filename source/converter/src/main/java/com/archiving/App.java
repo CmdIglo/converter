@@ -65,7 +65,12 @@ public class App {
             fileparser.setFile(file);
             products.add(fileparser.getContents());
         }
-
+        
+        //for(ArrayList<Product> elem : products) {
+        //    for(Product prod : elem) {
+        //        fileparser.printProduct(prod);
+        //    }
+        //}
     }
 
 }
