@@ -2,8 +2,10 @@ package com.archiving;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Main Class
@@ -30,6 +32,21 @@ public class App {
         FileWriter.setContents(readFiles(getFiles(filelocation)));
         FileWriter.write();
 
+        Parser TestParser = new Parser();
+        ArrayList<ArrayList<String>> testarray = TestParser.formatContents(readFiles(getFiles(filelocation)));
+        for(ArrayList<String> list : testarray) {
+            for(String elem : list) {
+                try{
+                BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt", true));
+                writer.append("\n");
+                writer.append(elem);
+
+                writer.close();
+                } catch(IOException e) {
+                    System.out.println("yolo");
+                }
+            }
+        }
     }
 
     /**

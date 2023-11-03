@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -83,6 +84,43 @@ public class Parser {
 
         return products;
 
+    }
+
+    /**
+     * Format XML files content
+     * @param content   List of contents returned by the App.readFiles() function
+     * @return          List of XML contents stored in another list containing the products' info as one format String
+     */
+    public ArrayList<ArrayList<String>> formatContents(ArrayList<ArrayList<String>> content) {
+        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+        for(ArrayList<String> file : content) {
+            ArrayList<Integer> prodindices = new ArrayList<Integer>();
+            for(int i = 0; i < file.size(); i++) {
+                if(file.get(i).equals("Next Product")) {
+                    prodindices.add(i);
+                }
+            }
+            ArrayList<String> products = new ArrayList<String>();
+            for(int j = 0; j < prodindices.size(); j++) {
+                StringBuilder xmlstring = new StringBuilder();
+                if(j == (prodindices.size() - 1)) {
+                    List<String> xmlcon = file.subList(prodindices.get(j), file.size()-1);
+                    for(String elem : xmlcon) {
+                        xmlstring.append(elem);
+                        xmlstring.append("\n");
+                    }
+                } else {
+                    List<String> xmlcon = file.subList(prodindices.get(j), prodindices.get(j+1));
+                    for(String elem : xmlcon) {
+                        xmlstring.append(elem);
+                        xmlstring.append("\n");
+                    }
+                }
+                products.add(xmlstring.toString());
+            }
+            result.add(products);
+        }
+        return result;
     }
 
 }
