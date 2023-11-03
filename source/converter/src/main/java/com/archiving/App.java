@@ -1,10 +1,7 @@
 package com.archiving;
-import com.archiving.models.Product;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import javax.swing.plaf.synth.SynthToolBarUI;
 
 import java.io.File;
 
@@ -29,7 +26,9 @@ public class App {
         System.out.println("Enter target location: ");
         targetlocation = scannerTgt.nextLine(); 
     
-        readFiles(getFiles(filelocation));
+        Writer FileWriter = new Writer(targetlocation);
+        FileWriter.setContents(readFiles(getFiles(filelocation)));
+        FileWriter.write();
 
     }
 
@@ -58,21 +57,18 @@ public class App {
     /**
      * Read all files
      * @param files List of files to be read
+     * @return      List of contents of files
      */
-    private static void readFiles(ArrayList<File> files) {
+    private static ArrayList<ArrayList<String>> readFiles(ArrayList<File> files) {
 
-        ArrayList<ArrayList<Product>> products = new ArrayList<ArrayList<Product>>();
+        ArrayList<ArrayList<String>> products = new ArrayList<ArrayList<String>>();
         Parser fileparser = new Parser(); 
         for(File file : files) {
             fileparser.setFile(file);
             products.add(fileparser.getContents());
         }
         
-        for(ArrayList<Product> elem : products) {
-            for(Product prod : elem) {
-                fileparser.printProduct(prod);
-            }
-        }
+        return products;
     }
 
 }
