@@ -4,6 +4,8 @@ import com.archiving.models.Product;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.plaf.synth.SynthToolBarUI;
+
 import java.io.File;
 
 /**
@@ -66,11 +68,11 @@ public class App {
             products.add(fileparser.getContents());
         }
         
-        //for(ArrayList<Product> elem : products) {
-        //    for(Product prod : elem) {
-        //        fileparser.printProduct(prod);
-        //    }
-        //}
+        for(ArrayList<Product> elem : products) {
+            for(Product prod : elem) {
+                fileparser.printProduct(prod);
+            }
+        }
     }
 
 }

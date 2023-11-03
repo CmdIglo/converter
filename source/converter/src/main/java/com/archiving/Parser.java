@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.archiving.models.Product;
@@ -204,18 +205,22 @@ public class Parser {
             boolean header = true;  //if header part of XML is being read (so that the top part of the xml is cut off)
             ArrayList<String> _products = new ArrayList<String>(); 
             
-            while (i < filelength) {
-                String data = filescanner.nextLine();
-                if(data.equals("\t<product>")) {    //if beginning of product
-                    header = false;     //header has been read and ignored
-                    end = false;    //new product part in xml
-                    prodidx = i;    //product start index
-                    _products.add("Next Product");
-                } else if(data.equals("\t</product>")) {
-                    end = true;     //end of product tag is reached
-                    _products.add("End Product");
-                } else if((i > prodidx) && !end && !header) {   //if line is under the "<product>" tag, the "</product>" tag hasn't been reached and line is not part of header part
-                    _products.add(data);
+            while (i < filelength && filescanner.hasNextLine()) {
+                try {
+                    String data = filescanner.nextLine();
+                    if(data.equals("\t<product>")) {    //if beginning of product
+                        header = false;     //header has been read and ignored
+                        end = false;    //new product part in xml
+                        prodidx = i;    //product start index
+                        _products.add("Next Product");
+                    } else if(data.equals("\t</product>")) {
+                        end = true;     //end of product tag is reached
+                        _products.add("End Product");
+                    } else if((i > prodidx) && !end && !header) {   //if line is under the "<product>" tag, the "</product>" tag hasn't been reached and line is not part of header part
+                        _products.add(data);
+                    }
+                } catch(NoSuchElementException e) {
+                    System.out.println(this.file.getName());
                 }
                 i++;
             }
@@ -227,167 +232,218 @@ public class Parser {
             for(String line : _products) {
                 if(line.equals("Next Product") && (!first)) {
                     NewProduct = new Product();
+                } else if(line.equals("Next Product") && (first)){
+                    first = false;
                 } else if(line.equals("End Product")) {
                     products.add(NewProduct);
-                } else if(line.contains("<[^>]+>[^<]+<\\/[^>]+>")){
+                } else if(isTagLine(line)){
                     String content = splitLine(line);
                     switch(getTag(line)) {
                         case a001:
                             NewProduct.a001 = content;
+                            break;
                         case a002:
                             NewProduct.a002 = content;
+                            break;
                         case b003:
                             NewProduct.b003 = content;
+                            break;
                         case b012:
                             NewProduct.b012 = content;
+                            break;
                         case b018:
                             NewProduct.series.b018 = content;
+                            break;
                         case b019:
                             NewProduct.series.b019 = content;
+                            break;
                         case b020:
                             NewProduct.series.b020 = content;
+                            break;
                         case b029:
                             NewProduct.title.b029 = content;
+                            break;
                         case b034:
                             NewProduct.contributor.b034 = content;
+                            break;
                         case b035:
                             NewProduct.contributor.b035 = content;
+                            break;
                         case b036:
                             NewProduct.contributor.b036 = content;
+                            break;
                         case b037:
                             NewProduct.contributor.b037 = content;
+                            break;
                         case b044:
                             NewProduct.contributor.b044 = content;
+                            break;
                         case b047:
                             NewProduct.contributor.b047 = content;
+                            break;
                         case b057:
                             NewProduct.b057 = content;
+                            break;
                         case b061:
                             NewProduct.b061 = content;
+                            break;
                         case b064:
                             NewProduct.b064 = content;
+                            break;
                         case b065:
                             NewProduct.b065 = content;
+                            break;
                         case b067:
                             NewProduct.subject.b067 = content;
+                            break;
                         case b068:
                             NewProduct.mainsubject.b068 = content;
+                            break;
                         case b069:
                             NewProduct.mainsubject.b069 = content;
+                            break;
                         case b079:
                             NewProduct.imprint.b079 = content;
+                            break;
                         case b081:
                             NewProduct.publisher.b081 = content;
+                            break;
                         case b083:
                             NewProduct.b083 = content;
+                            break;
                         case b089:
                             NewProduct.salesrights.b089 = content;
+                            break;
                         case b090:
                             NewProduct.salesrights.b090 = content;
+                            break;
                         case b191:
                             NewProduct.mainsubject.b191 = content;
+                            break;
                         case b202:
                             NewProduct.title.b202 = content;
+                            break;
                         case b203:
                             NewProduct.title.b203 = content;
+                            break;
                         case b209:
                             NewProduct.b209 = content;
+                            break;
                         case b211:
                             NewProduct.b211 = content;
+                            break;
                         case b221:
                             NewProduct.productidentifier.b221 = content;
+                            break;
                         case b241:
                             NewProduct.publisher.b241 = content;
+                            break;
                         case b243:
                             NewProduct.publisher.b243 = content;
+                            break;
                         case b244:
                             NewProduct.productidentifier.b244 = content;
+                            break;
                         case b251:
                             NewProduct.supplydetail.price.b251 = content;
                             NewProduct.supplydetail.b251 = content;
+                            break;
                         case b252:
                             NewProduct.language.b252 = content;
+                            break;
                         case b253:
                             NewProduct.language.b253 = content;
+                            break;
                         case b255:
                             NewProduct.b255 = content;
+                            break;
                         case b273:
                             NewProduct.series.identifier.b273 = content;
+                            break;
                         case b291:
                             NewProduct.publisher.b291 = content;
+                            break;
                         case b388:
                             NewProduct.salesrights.b388 = content;
+                            break;
                         case contributor:
-                            continue;
+                            break;
                         case d102:
                             NewProduct.othertext.d102 = content;
+                            break;
                         case d103:
                             NewProduct.othertext.d103 = content;
+                            break;
                         case d104:
                             NewProduct.othertext.d104 = content;
+                            break;
                         case h208:
                             NewProduct.relatedproduct.h208 = content;
+                            break;
                         case imprint:
-                            continue;
+                            break;
                         case j141:
                             NewProduct.supplydetail.j141 = content;
+                            break;
                         case j142:
                             NewProduct.supplydetail.j142 = content;
+                            break;
                         case j143:
                             NewProduct.supplydetail.j143 = content;
+                            break;
                         case j148:
                             NewProduct.supplydetail.j148 = content;
                             NewProduct.supplydetail.price.j148 = content;
+                            break;
                         case j151:
                             NewProduct.supplydetail.j151 = content;
                             NewProduct.supplydetail.price.j151 = content;
+                            break;
                         case j152:
                             NewProduct.supplydetail.j152 = content;
                             NewProduct.supplydetail.price.j152 = content;
+                            break;
                         case j153:
                             NewProduct.supplydetail.j153 = content;
                             NewProduct.supplydetail.price.j153 = content;
+                            break;
                         case j161:
                             NewProduct.supplydetail.j161 = content;
                             NewProduct.supplydetail.price.j161 = content;
+                            break;
                         case j162:
                             NewProduct.supplydetail.j162 = content;
                             NewProduct.supplydetail.price.j162 = content;
+                            break;
                         case j396:
                             NewProduct.supplydetail.j396 = content;
+                            break;
                         case language:
-                            continue;
                         case mainsubject:
-                            continue;
+                            break;
                         case n338:
                             NewProduct.n338 = content;
+                            break;
                         case n386:
                             NewProduct.n386 = content;
+                            break;
                         case othertext:
-                            continue;
                         case price:
-                            continue;
                         case productidentifier:
-                            continue;
                         case publisher:
-                            continue;
                         case relatedproduct:
-                            continue;
                         case salesrights:
-                            continue;
                         case series:
-                            continue;
                         case seriesidentifier:
-                            continue;
                         case subject:
-                            continue;
                         case supplydetail:
-                            continue;
                         case title:
-                            continue;
+                            break;
+                        case notincluded:
+                            break;
                     }
-                }
-            }
+                } 
+            } 
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -398,9 +454,34 @@ public class Parser {
     }
 
     /**
+     * Checks if a line is a "tagline" (a line where info is stored in a tag)
+     * @param line  The line to be checked
+     * @return      If line is a "tagline"
+     */
+    private boolean isTagLine(String line) {
+        return((countOcc('<', line) == 2) && (countOcc('>', line) == 2) && (countOcc('/', line) == 1));
+    }
+
+    /**
+     * Counts occurences of a certain character in a given string
+     * @param chr   The character
+     * @param str   The string
+     * @return      Number of occurrences of the character in the string
+     */
+    private int countOcc(char chr, String str) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == chr) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Splits line and gets the content between the two tags of the line
      * @param line  The line to be split
-     * @return  The content between the tags
+     * @return      The content between the tags
      */
     public String splitLine(String line) {
         String content = line.split(">")[1].split("<")[0];
@@ -410,12 +491,15 @@ public class Parser {
     /**
      * Gets the tag of the line (i.e. what info is written in the line)
      * @param line  The line where the tag is to be fetched
-     * @return  The tag of the line
+     * @return      The tag of the line
      */
     public Tags getTag(String line) {
         String tag = line.split("<")[1].split(">")[0];
-        System.out.println(tag);
-        return _tags[Arrays.asList(tags).indexOf(tag)];
+        if(Arrays.asList(tags).contains(tag)) {
+            int index = Arrays.asList(tags).indexOf(tag);
+            return _tags[index];
+        }
+        return Tags.notincluded;
     }
 
     /**
@@ -423,7 +507,16 @@ public class Parser {
      * @param prod  Product to be printed
      */
     public void printProduct(Product prod) {
+        System.out.println("A001: " + prod.a001);
         System.out.println(prod.title.b203);
+    }
+
+    /**
+     * Returns the file name of the file stored in the parser
+     * @return  File Name
+     */
+    public String getFile() {
+        return this.file.getName();
     }
 
 }

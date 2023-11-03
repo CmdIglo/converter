@@ -76,5 +76,6 @@ public enum Tags {
     b251,
     j153,
     j161,
-    j162
+    j162,
+    notincluded
 }
