@@ -18,17 +18,35 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileSystemView;
 
+/**
+ * The main window class building the gui
+ * 
+ * @author Maxwell Leu
+ */
 public class MainWindow {
     
+    /** Main frame */
     private JFrame frame;
+    /** Label that shows the storage location */
     private JLabel storageLocationLabel;
+    /** Label that shows the target folder location */
     private JLabel targetFolderLabel;
+    /** Progress bar displaying conversion process progress */
     private JProgressBar progressBar;
+    /** Label of the progress bar -> Logger */
     private JLabel statusLabel;
 
+    /** The storage location set by the user */
     private String storagelocation;
+    /** The target folder location set by the user */
     private String targetlocation;
 
+    /**
+     * Class constructor
+     * @param width     Width of window
+     * @param height    Height of window
+     * @param title     Title of window
+     */
     public MainWindow(int width, int height, String title) {
         frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,10 +130,18 @@ public class MainWindow {
         frame.add(statusLabel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Get the window reference
+     * @return  The window reference
+     */
     public JFrame getWindow() {
         return this.frame;
     }
 
+    /**
+     * Update the status label for the status bar
+     * @param info  The text of the label
+     */
     public void updateLabel(String info) {
         this.statusLabel.setText(info);
     }
