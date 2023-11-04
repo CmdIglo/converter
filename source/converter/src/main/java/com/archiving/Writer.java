@@ -1,7 +1,9 @@
 package com.archiving;
 
 import java.util.ArrayList;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -37,7 +39,19 @@ public class Writer {
      * Write the files into the folder     
      */
     public void write() {
-        
+        for(ArrayList<String> list : this.contents) {
+            for(String elem : list) {
+                try{
+                    String prodId = elem.split("<b244>")[1].split("</b244>")[0] + ".xml";
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt", true));
+                    writer.append("\n");
+                    writer.append(buildXML(elem));
+                    writer.close();
+                } catch(IOException | ArrayIndexOutOfBoundsException e) {
+                    System.out.println("yolo");
+                }
+            }
+        }
     }
 
     /**
@@ -64,9 +78,9 @@ public class Writer {
                 "\t<b089>02</b089>\r\n" + //
                 "\t<b388>WORLD</b388>\r\n" + //
                 "\t</salesrights>\r\n" + //
-                "\t<product>";
+                "\t<product>\n";
         String xmlend = "\t</product>\r\n" + //
-                "</ONIXmessage>";
+                "</ONIXmessage>\n";
         String xmlfile = xmlhead + content + xmlend;
         return xmlfile;
     }

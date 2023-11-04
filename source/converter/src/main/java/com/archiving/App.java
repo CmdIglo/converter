@@ -2,6 +2,9 @@ package com.archiving;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import com.archiving.gui.MainWindow;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -27,26 +30,14 @@ public class App {
         Scanner scannerTgt = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Enter target location: ");
         targetlocation = scannerTgt.nextLine(); 
-    
+        MainWindow Win = new MainWindow(400, 400, "Konvertierer");
+        Win.getWindow().setResizable(false);
+        Win.getWindow().setVisible(true);
+        
         Writer FileWriter = new Writer(targetlocation);
-        FileWriter.setContents(readFiles(getFiles(filelocation)));
+        Parser Formatter = new Parser();
+        FileWriter.setContents(Formatter.formatContents(readFiles(getFiles(filelocation))));
         FileWriter.write();
-
-        Parser TestParser = new Parser();
-        ArrayList<ArrayList<String>> testarray = TestParser.formatContents(readFiles(getFiles(filelocation)));
-        for(ArrayList<String> list : testarray) {
-            for(String elem : list) {
-                try{
-                BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt", true));
-                writer.append("\n");
-                writer.append(elem);
-
-                writer.close();
-                } catch(IOException e) {
-                    System.out.println("yolo");
-                }
-            }
-        }
     }
 
     /**

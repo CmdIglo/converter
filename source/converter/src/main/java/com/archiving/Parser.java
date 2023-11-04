@@ -104,13 +104,13 @@ public class Parser {
             for(int j = 0; j < prodindices.size(); j++) {
                 StringBuilder xmlstring = new StringBuilder();
                 if(j == (prodindices.size() - 1)) {
-                    List<String> xmlcon = file.subList(prodindices.get(j), file.size()-1);
+                    List<String> xmlcon = file.subList(prodindices.get(j)+1, file.size()-2);
                     for(String elem : xmlcon) {
                         xmlstring.append(elem);
                         xmlstring.append("\n");
                     }
                 } else {
-                    List<String> xmlcon = file.subList(prodindices.get(j), prodindices.get(j+1));
+                    List<String> xmlcon = file.subList(prodindices.get(j)+1, prodindices.get(j+1)-1);
                     for(String elem : xmlcon) {
                         xmlstring.append(elem);
                         xmlstring.append("\n");
