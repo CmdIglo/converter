@@ -40,6 +40,12 @@ public class MainWindow {
     private String storagelocation;
     /** The target folder location set by the user */
     private String targetlocation;
+    /** The database location set by the user */
+    private String dblocation;
+    /** The location of the folder containing the ebooks */
+    private String ebooklocation;
+    /** The location of the folder containing the covers */
+    private String coverslocation;
 
     /**
      * Class constructor
@@ -144,6 +150,46 @@ public class MainWindow {
      */
     public void updateLabel(String info) {
         this.statusLabel.setText(info);
+    }
+
+    /**
+     * Get the storage location
+     * @return  Storage location of XMLs
+     */
+    public String getStorageLoc() {
+        return this.storagelocation;
+    }
+
+    /**
+     * Get target folder location
+     * @return  Target folder location
+     */
+    public String getTargetLoc() {
+        return this.targetlocation;
+    }
+
+    /**
+     * Get database location
+     * @return  Database location
+     */
+    public String getDbLoc() {
+        return this.dblocation;
+    }
+
+    /**
+     * Get eBook storage folder location
+     * @return  eBook storage folder location
+     */
+    public String getEbookLoc() {
+        return this.ebooklocation;
+    }
+
+    /**
+     * Get covers storage folder location
+     * @return  Covers storage folder location
+     */
+    public String getCoversLoc() {
+        return this.coverslocation;
     }
 
 }
