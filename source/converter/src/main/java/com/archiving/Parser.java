@@ -9,15 +9,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.archiving.utils.Tags;
+
 /**
  * Parser for XML file
  * 
  * @author Maxwell Leu
  */
 public class Parser {
-    
+
     /** File to be parsed */
     private File file;
+
+    private String[] tags = Tags.tags;
+    private String[] reqtags = Tags.reqTags;
     
     /**
      * Set file class variable

@@ -47,6 +47,9 @@ public class MainWindow {
     /** The location of the folder containing the covers */
     private String coverslocation;
 
+    /** Gui connector for functionality */
+    private GuiConnector Connector;
+
     /**
      * Class constructor
      * @param width     Width of window
