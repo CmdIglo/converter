@@ -2,13 +2,13 @@ package com.archiving;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import com.archiving.utils.Functions;
 import com.archiving.utils.Tags;
 
 /**
@@ -21,8 +21,10 @@ public class Parser {
     /** File to be parsed */
     private File file;
 
-    private String[] tags = Tags.tags;
-    private String[] reqtags = Tags.reqTags;
+    /** The specific tags for the XML as ArrayList for ease of use */
+    private ArrayList<String> tags = new ArrayList<String>(Arrays.asList(Tags.tags));
+    /** The required tags for ProQuest XML */
+    private ArrayList<String> reqtags = new ArrayList<String>(Arrays.asList(Tags.reqTags));
     
     /**
      * Set file class variable
@@ -53,26 +55,29 @@ public class Parser {
             
             Scanner filescanner = new Scanner(this.file);
             int filelength = (int) Files.lines(this.file.toPath()).count();
-            int i = 0;   //for normal functionality of while loop
-            int prodidx = 0;    //index of beginning of a new product
-            boolean end = false;    //if end of a product is reached (so that the last part of the XML is cut off)
-            boolean header = true;  //if header part of XML is being read (so that the top part of the xml is cut off)
+            int i = 0;                                                      //for normal functionality of while loop
+            int prodidx = 0;                                                //index of beginning of a new product
+            boolean end = false;                                            //if end of a product is reached (so that the last part of the XML is cut off)
+            boolean header = true;                                          //if header part of XML is being read (so that the top part of the xml is cut off)
             ArrayList<String> _products = new ArrayList<String>(); 
             
             while (i < filelength && filescanner.hasNextLine()) {
                 try {
                     String data = filescanner.nextLine();
-                    if(data.equals("\t<product>")) {    //if beginning of product
-                        header = false;     //header has been read and ignored
-                        end = false;    //new product part in xml
-                        prodidx = i;    //product start index
+                    if(data.equals("\t<product>")) {                                     //if beginning of product
+                        header = false;                                                           //header has been read and ignored
+                        end = false;                                                              //new product part in xml
+                        prodidx = i;                                                              //product start index
                         _products.add("Next Product");
                     } else if(data.equals("\t</product>")) {
-                        end = true;     //end of product tag is reached
+                        end = true;                                                               //end of product tag is reached
                         _products.add("End Product");
-                    } else if((i > prodidx) && !end && !header) {   //if line is under the "<product>" tag, the "</product>" tag hasn't been reached and line is not part of header part
-                        _products.add(data);
-                    }
+                    } else if((i > prodidx) && !end && !header) {                                 //if line is under the "<product>" tag, the "</product>" tag hasn't been reached and line is not part of header part
+                        if(tags.contains(Functions.getTag(data)) || //
+                            reqtags.contains(Functions.getTag(data))) {                                     //check if tag is necessary
+                            _products.add(data);
+                        }
+                    } 
                 } catch(NoSuchElementException e) {
                     System.out.println(this.file.getName());
                 }

@@ -48,7 +48,7 @@ public class MainWindow {
     private String coverslocation;
 
     /** Gui connector for functionality */
-    private GuiConnector Connector;
+    //private GuiConnector Connector;
 
     /**
      * Class constructor

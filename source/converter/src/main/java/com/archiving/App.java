@@ -5,10 +5,7 @@ import java.util.Scanner;
 
 import com.archiving.gui.MainWindow;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Main Class
@@ -30,6 +27,8 @@ public class App {
         Scanner scannerTgt = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Enter target location: ");
         targetlocation = scannerTgt.nextLine(); 
+        scannerLoc.close();
+        scannerTgt.close();
         MainWindow Win = new MainWindow(400, 400, "Konvertierer");
         Win.getWindow().setResizable(false);
         Win.getWindow().setVisible(true);

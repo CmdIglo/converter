@@ -1,6 +1,11 @@
 package com.archiving;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.archiving.utils.Functions;
+import com.archiving.utils.Tags;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +23,9 @@ public class Writer {
     private String path;
     /** List of all products in the directory */
     private ArrayList<ArrayList<String>> contents;
+
+    /** The required tags for ProQuest XML */
+    private ArrayList<String> reqtags = new ArrayList<String>(Arrays.asList(Tags.reqTags));
 
     /**
      * Class constructor
@@ -39,10 +47,11 @@ public class Writer {
      * Write the files into the folder     
      */
     public void write() {
+        this.contents = prepareContent(this.contents);
         for(ArrayList<String> list : this.contents) {
             for(String elem : list) {
                 try{
-                    String prodId = elem.split("<b244>")[1].split("</b244>")[0] + ".xml";
+                    //String prodId = elem.split("<b244>")[1].split("</b244>")[0] + ".xml";
                     BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt", true));
                     writer.append("\n");
                     writer.append(buildXML(elem));
@@ -52,6 +61,39 @@ public class Writer {
                 }
             }
         }
+    }
+
+    /**
+     * Prepare the xml content by adding missing tags
+     * @param content   The XML content
+     * @return          Prepared content with missing informations
+     */
+    private ArrayList<ArrayList<String>> prepareContent(ArrayList<ArrayList<String>> content) {
+        
+        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+
+        for(ArrayList<String> product : content) {
+            ArrayList<String> prodtags = new ArrayList<String>();   //all tags in the product
+            for(String line : product) {
+                prodtags.add(Functions.getTag(line));
+            }
+            ArrayList<String> missingtags = new ArrayList<String>();
+            for(String tag : reqtags) {
+                if(!(prodtags.contains(tag))) {                     //if a required tag is missing from the product 
+                    //add the tag to the file with missing information fetched from the database
+                    missingtags.add(tag);
+                }
+            }
+            StringBuilder missinglabel = new StringBuilder();
+            missinglabel.append("\nMissing Tags: ");
+            for(String tag : missingtags) {
+                missinglabel.append(tag);
+            }
+            product.add(missinglabel + "\n");       //TODO look into missing tags and blank lines -> work out, why there is no product sometimes
+            result.add(product);
+        }
+
+        return result;
     }
 
     /**
