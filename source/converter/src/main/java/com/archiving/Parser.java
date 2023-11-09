@@ -77,7 +77,11 @@ public class Parser {
                             reqtags.contains(Functions.getTag(data))) {                                     //check if tag is necessary
                             _products.add(data);
                         }
-                    } 
+                    } else if(data.equals("")) {                                        //if line is empty (otherwise it would be stored in the contents array and a xml woud be written for a single empty line)
+                        continue;  
+                    } else if(i == (filelength-1) && (data.equals(""))) {               //see other empty line
+                        break;
+                    }
                 } catch(NoSuchElementException e) {
                     System.out.println(this.file.getName());
                 }

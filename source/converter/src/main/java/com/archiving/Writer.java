@@ -72,24 +72,147 @@ public class Writer {
         
         ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
-        for(ArrayList<String> product : content) {
-            ArrayList<String> prodtags = new ArrayList<String>();   //all tags in the product
+        for(ArrayList<String> product : content) {          //"product" is an array of products, where line (see below) is a product
             for(String line : product) {
-                prodtags.add(Functions.getTag(line));
-            }
-            ArrayList<String> missingtags = new ArrayList<String>();
-            for(String tag : reqtags) {
-                if(!(prodtags.contains(tag))) {                     //if a required tag is missing from the product 
-                    //add the tag to the file with missing information fetched from the database
-                    missingtags.add(tag);
+                ArrayList<String> prodtags = Functions.getTags(line);
+                ArrayList<String> missingtags = new ArrayList<String>();
+                for(String tag : reqtags) {
+                    if(!(prodtags.contains(tag))) {                     //if a required tag is missing from the product 
+                        //add the tag to the file with missing information fetched from the database
+                        missingtags.add(tag);
+                    }
                 }
+                StringBuilder missinglabel = new StringBuilder();
+                ArrayList<String> _tags = missingtags;                  //so that one array can be changed for the functions in the switch statement to look up if a tag hase already been set
+                missinglabel.append("\nMissing Tags: ");
+                for(String tag : missingtags) {
+                    missinglabel.append(tag);           //for development and testing
+                    if(_tags.contains(tag)) {
+                        switch (tag) {
+                            case "a001":
+                                break;
+                            case "a002":
+                                break;
+                            case "productidentifier":
+                                break;
+                            case "b221":
+                                break;
+                            case "b244":
+                                break;
+                            case "b012":
+                                break;
+                            case "b211":
+                                break;
+                            case "series":
+                                break;
+                            case "seriesidentifier":
+                                break;
+                            case "b273":
+                                break;
+                            case "b018":
+                                break;
+                            case "n338":
+                                break;
+                            case "title":
+                                break;
+                            case "b202":
+                                break;
+                            case "b203":
+                                break;
+                            case "contributor":
+                                break;
+                            case "b034":
+                                break;
+                            case "b035":
+                                break;
+                            case "b036":
+                                break;
+                            case "b037":
+                                break;
+                            case "b047":
+                                break;
+                            case "b044":
+                                break;
+                            case "language":
+                                break;
+                            case "b253":
+                                break;
+                            case "b252":
+                                break;
+                            case "mainsubject":
+                                break;
+                            case "b191":
+                                break;
+                            case "b068":
+                                break;
+                            case "b069":
+                                break;
+                            case "subject":
+                                break;
+                            case "b067":
+                                break;
+                            case "othertext":
+                                break;
+                            case "d102":
+                                break;
+                            case "d103":
+                                break;
+                            case "d104":
+                                break;
+                            case "imprint":
+                                break;
+                            case "b079":
+                                break;
+                            case "publisher":
+                                break;
+                            case "b291":
+                                break;
+                            case "b081":
+                                break;
+                            case "b241":
+                                break;
+                            case "b243":
+                                break;
+                            case "b003":
+                                break;
+                            case "salesrights":
+                                break;
+                            case "b089":
+                                break;
+                            case "b090":
+                                break;
+                            case "b388":
+                                break;
+                            case "relatedproduct":
+                                break;
+                            case "h208":
+                                break;
+                            case "supplydetail":
+                                break;
+                            case "j141":
+                                break;
+                            case "j396":
+                                break;
+                            case "price":
+                                break;
+                            case "j148":
+                                break;
+                            case "j151":
+                                break;
+                            case "j152":
+                                break;
+                            case "b251":
+                                break;
+                            case "j153":
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    line.concat(missinglabel.toString()); 
+                }
+                line.concat("Eigentlich funktionierts");
             }
-            StringBuilder missinglabel = new StringBuilder();
-            missinglabel.append("\nMissing Tags: ");
-            for(String tag : missingtags) {
-                missinglabel.append(tag);
-            }
-            product.add(missinglabel + "\n");       //TODO look into missing tags and blank lines -> work out, why there is no product sometimes
             result.add(product);
         }
 
@@ -128,3 +251,9 @@ public class Writer {
     }
 
 }
+
+/*
+String test = "\r\n" + //
+        "Missing Tags: a002productidentifierb221b244b012b211seriesseriesidentifierb273b018n338titleb202b203contributorb034b035b036b037b047b044languageb253b252mainsubjectb191b068b069subjectb067b069othertextd102d103d104imprintb079publisherb291b081b241b243b003salesrightsb089b090b388relatedproducth208productidentifierb221b244b012supplydetailj141j396pricej148j151j152b251j153\r\n" + //
+        ""
+ */
