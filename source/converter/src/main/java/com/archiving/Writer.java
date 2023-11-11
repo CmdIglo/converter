@@ -7,6 +7,7 @@ import com.archiving.utils.Functions;
 import com.archiving.utils.Tags;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -44,7 +45,8 @@ public class Writer {
     }
 
     /**
-     * Write the files into the folder     
+     * Write the files into the folder    
+     * Used for Tests 
      */
     public void write() {
         this.contents = prepareContent(this.contents);
@@ -52,12 +54,41 @@ public class Writer {
             for(String elem : list) {
                 try{
                     //String prodId = elem.split("<b244>")[1].split("</b244>")[0] + ".xml";
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt", true));
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("books\\temp.txt", true));
                     writer.append("\n");
                     writer.append(buildXML(elem));
                     writer.close();
                 } catch(IOException | ArrayIndexOutOfBoundsException e) {
-                    System.out.println("yolo");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Write the files into the given folder     
+     */
+    public void write(String target) {
+        this.contents = prepareContent(this.contents);
+        for(ArrayList<String> list : this.contents) {
+            for(String elem : list) {
+                try{
+
+                    //TODO figure out what happens, when a prod ID occurs more than once -> something like for i++ if xml name has prod ID in it and (i) in it try naming it next i
+
+                    String prodId = elem.split("<b244>")[1].split("</b244>")[0] + ".xml";
+                    File targetLocDir = new File(target+"\\books");
+                    if(!targetLocDir.exists()) {
+                       targetLocDir.mkdirs(); 
+                    }                    
+                    File BookfIle = new File(target + "\\books\\" + prodId);
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(BookfIle, false));
+                    writer.append("\n");
+                    writer.append(buildXML(elem));
+                    writer.close();
+                } catch(IOException | ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                    System.out.println(elem);
                 }
             }
         }
@@ -209,9 +240,9 @@ public class Writer {
                                 break;
                         }
                     }
-                    line.concat(missinglabel.toString()); 
                 }
-                line.concat("Eigentlich funktionierts");
+                //line.concat(missinglabel.toString());
+                //line.concat("Eigentlich funktionierts");
             }
             result.add(product);
         }
@@ -251,9 +282,3 @@ public class Writer {
     }
 
 }
-
-/*
-String test = "\r\n" + //
-        "Missing Tags: a002productidentifierb221b244b012b211seriesseriesidentifierb273b018n338titleb202b203contributorb034b035b036b037b047b044languageb253b252mainsubjectb191b068b069subjectb067b069othertextd102d103d104imprintb079publisherb291b081b241b243b003salesrightsb089b090b388relatedproducth208productidentifierb221b244b012supplydetailj141j396pricej148j151j152b251j153\r\n" + //
-        ""
- */

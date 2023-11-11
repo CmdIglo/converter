@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -17,6 +18,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileSystemView;
+
+import com.archiving.Parser;
+import com.archiving.Writer;
+import com.archiving.utils.Functions;
 
 /**
  * The main window class building the gui
@@ -65,6 +70,16 @@ public class MainWindow {
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Einstellungen");
         JMenu documentationMenu = new JMenu("Dokumentation");
+
+        
+
+        settingsMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
         menuBar.add(settingsMenu);
         menuBar.add(documentationMenu);
         frame.setJMenuBar(menuBar);
@@ -131,7 +146,12 @@ public class MainWindow {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Start button logic
+                if((storagelocation != "") && (targetlocation != "")) {
+                    Writer FileWriter = new Writer(targetlocation);
+                    Parser Formatter = new Parser();
+                    FileWriter.setContents(Formatter.formatContents(Functions.readFiles(Functions.getFiles(storagelocation))));
+                    FileWriter.write(targetlocation);
+                }
             }
         });
 
