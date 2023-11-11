@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -71,7 +70,7 @@ public class MainWindow {
         JMenu settingsMenu = new JMenu("Einstellungen");
         JMenu documentationMenu = new JMenu("Dokumentation");
 
-        
+
 
         settingsMenu.addActionListener(new ActionListener() {
             @Override

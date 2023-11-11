@@ -20,8 +20,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class Writer {
     
-    /** The path the writer writes to */
-    private String path;
+    /** The path the writer writes to, probably unused */
+    private String path;        
     /** List of all products in the directory */
     private ArrayList<ArrayList<String>> contents;
 
