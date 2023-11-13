@@ -126,8 +126,15 @@ public class Parser {
                 } else {
                     List<String> xmlcon = file.subList(prodindices.get(j)+1, prodindices.get(j+1)-1);
                     for(String elem : xmlcon) {
-                        xmlstring.append(elem);
-                        xmlstring.append("\n");
+                        if(elem.contains("<b012>")) {
+                            String format = elem.split("<b012>")[0];                                          //tabs and spaces
+                            String newLine = format + "<b012>DG</b012>" + "\n" + format + "<b211>02</b211>";        //formatting of b211 based on the format of b012 -> same indentation
+                            xmlstring.append(newLine);
+                            xmlstring.append("\n");
+                        } else {
+                            xmlstring.append(elem);
+                            xmlstring.append("\n");
+                        }
                     }
                 }
                 products.add(xmlstring.toString());

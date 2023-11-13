@@ -87,8 +87,6 @@ public class Writer {
                     writer.append(buildXML(elem));
                     writer.close();
                 } catch(IOException | ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                    System.out.println(elem);
                 }
             }
         }
