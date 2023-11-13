@@ -74,12 +74,12 @@ public class Parser {
                         _products.add("End Product");
                     } else if((i > prodidx) && !end && !header) {                                 //if line is under the "<product>" tag, the "</product>" tag hasn't been reached and line is not part of header part
                         if(tags.contains(Functions.getTag(data)) || //
-                            reqtags.contains(Functions.getTag(data))) {                                     //check if tag is necessary
+                            reqtags.contains(Functions.getTag(data))) {                           //check if tag is necessary
                             _products.add(data);
                         }
-                    } else if(data.equals("")) {                                        //if line is empty (otherwise it would be stored in the contents array and a xml woud be written for a single empty line)
+                    } else if(data.equals("")) {                                         //if line is empty (otherwise it would be stored in the contents array and a xml woud be written for a single empty line)
                         continue;  
-                    } else if(i == (filelength-1) && (data.equals(""))) {               //see other empty line
+                    } else if(i == (filelength-1) && (data.equals(""))) {                //see other empty line
                         break;
                     }
                 } catch(NoSuchElementException e) {

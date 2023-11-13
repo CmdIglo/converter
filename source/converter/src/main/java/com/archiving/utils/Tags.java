@@ -97,10 +97,10 @@ public class Tags {
         "a001", 
         "a002", 
         "productidentifier", 
-        "b221",     // -> 15
+        "b221",     
         "b244", 
-        "b012",     // -> "DG"
-        "b211",     // -> 02 "PDF"
+        "b012",     // -> "DG"      DONE
+        "b211",     // -> 02 "PDF"  DONE
         "series", 
         "seriesidentifier", 
         "b273", 
