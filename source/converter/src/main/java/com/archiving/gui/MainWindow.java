@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileSystemView;
@@ -68,16 +69,19 @@ public class MainWindow {
 
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Einstellungen");
+        JMenuItem settings = new JMenuItem("Speicherorte konfigurieren");
         JMenu documentationMenu = new JMenu("Dokumentation");
-
-
-
-        settingsMenu.addActionListener(new ActionListener() {
+        //JMenuItem showDocs = new JMenuItem("Dokumentation anzeigen");
+        
+        settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SettingsMenu Settings = new SettingsMenu(400, 400);
+                Settings.setVisible(true);
             }
         });
+
+        settingsMenu.add(settings);
 
         menuBar.add(settingsMenu);
         menuBar.add(documentationMenu);

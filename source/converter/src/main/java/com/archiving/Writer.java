@@ -1,10 +1,6 @@
 package com.archiving;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.archiving.utils.Functions;
-import com.archiving.utils.Tags;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,19 +17,16 @@ import java.time.format.DateTimeFormatter;
 public class Writer {
     
     /** The path the writer writes to, probably unused */
-    private String path;        
+    //private String path;        
     /** List of all products in the directory */
     private ArrayList<ArrayList<String>> contents;
-
-    /** The required tags for ProQuest XML */
-    private ArrayList<String> reqtags = new ArrayList<String>(Arrays.asList(Tags.reqTags));
 
     /**
      * Class constructor
      * @param path  The path the writer writes to
      */
     public Writer(String path) {
-        this.path = path;
+        //this.path = path;
     }
 
     /**
@@ -49,7 +42,6 @@ public class Writer {
      * Used for Tests 
      */
     public void write() {
-        this.contents = prepareContent(this.contents);
         for(ArrayList<String> list : this.contents) {
             for(String elem : list) {
                 try{
@@ -69,7 +61,6 @@ public class Writer {
      * Write the files into the given folder     
      */
     public void write(String target) {
-        this.contents = prepareContent(this.contents);
         for(ArrayList<String> list : this.contents) {
             for(String elem : list) {
                 try{
@@ -90,162 +81,6 @@ public class Writer {
                 }
             }
         }
-    }
-
-    /**
-     * Prepare the xml content by adding missing tags
-     * @param content   The XML content
-     * @return          Prepared content with missing informations
-     */
-    private ArrayList<ArrayList<String>> prepareContent(ArrayList<ArrayList<String>> content) {
-        
-        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
-
-        for(ArrayList<String> product : content) {          //"product" is an array of products, where line (see below) is a product
-            for(String line : product) {
-                ArrayList<String> prodtags = Functions.getTags(line);
-                ArrayList<String> missingtags = new ArrayList<String>();
-                for(String tag : reqtags) {
-                    if(!(prodtags.contains(tag))) {                     //if a required tag is missing from the product 
-                        //add the tag to the file with missing information fetched from the database
-                        missingtags.add(tag);
-                    }
-                }
-                StringBuilder missinglabel = new StringBuilder();
-                ArrayList<String> _tags = missingtags;                  //so that one array can be changed for the functions in the switch statement to look up if a tag hase already been set
-                missinglabel.append("\nMissing Tags: ");
-                for(String tag : missingtags) {
-                    missinglabel.append(tag);           //for development and testing
-                    if(_tags.contains(tag)) {
-                        switch (tag) {
-                            case "a001":
-                                break;
-                            case "a002":
-                                break;
-                            case "productidentifier":
-                                break;
-                            case "b221":
-                                break;
-                            case "b244":
-                                break;
-                            case "b012":
-                                break;
-                            case "b211":
-                                break;
-                            case "series":
-                                break;
-                            case "seriesidentifier":
-                                break;
-                            case "b273":
-                                break;
-                            case "b018":
-                                break;
-                            case "n338":
-                                break;
-                            case "title":
-                                break;
-                            case "b202":
-                                break;
-                            case "b203":
-                                break;
-                            case "contributor":
-                                break;
-                            case "b034":
-                                break;
-                            case "b035":
-                                break;
-                            case "b036":
-                                break;
-                            case "b037":
-                                break;
-                            case "b047":
-                                break;
-                            case "b044":
-                                break;
-                            case "language":
-                                break;
-                            case "b253":
-                                break;
-                            case "b252":
-                                break;
-                            case "mainsubject":
-                                break;
-                            case "b191":
-                                break;
-                            case "b068":
-                                break;
-                            case "b069":
-                                break;
-                            case "subject":
-                                break;
-                            case "b067":
-                                break;
-                            case "othertext":
-                                break;
-                            case "d102":
-                                break;
-                            case "d103":
-                                break;
-                            case "d104":
-                                break;
-                            case "imprint":
-                                break;
-                            case "b079":
-                                break;
-                            case "publisher":
-                                break;
-                            case "b291":
-                                break;
-                            case "b081":
-                                break;
-                            case "b241":
-                                break;
-                            case "b243":
-                                break;
-                            case "b003":
-                                break;
-                            case "salesrights":
-                                break;
-                            case "b089":
-                                break;
-                            case "b090":
-                                break;
-                            case "b388":
-                                break;
-                            case "relatedproduct":
-                                break;
-                            case "h208":
-                                break;
-                            case "supplydetail":
-                                break;
-                            case "j141":
-                                break;
-                            case "j396":
-                                break;
-                            case "price":
-                                break;
-                            case "j148":
-                                break;
-                            case "j151":
-                                break;
-                            case "j152":
-                                break;
-                            case "b251":
-                                break;
-                            case "j153":
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                //line.concat(missinglabel.toString());
-                //line.concat("Eigentlich funktionierts");
-            }
-            result.add(product);
-        }
-
-        return result;
     }
 
     /**
