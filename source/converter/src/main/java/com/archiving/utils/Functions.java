@@ -105,21 +105,35 @@ public class Functions {
     }
 
     /**
+     * Connects to a database and returns a Statement Object for executing SQL queries
+     * @param url               The URL of the Database
+     * @return                  A Statement for SQL Query execution
+     * @throws SQLException     SQL Exception for when no Connection could be established
+     */
+    public static Statement connectToDatabase(String url) throws SQLException {
+        try{
+            Connection Connection = DriverManager.getConnection(url);
+            Statement SQLQuery = Connection.createStatement();
+            return SQLQuery;
+        } catch(SQLException e) {
+            throw new SQLException("Could not establish connection to database");
+        }
+    }
+
+    /**
      * Makes a query to the database
      * @param query     The SQL query to be executed
      * @return          Result from DB
      */
-    public static ArrayList<String> makeQuery(String query) throws SQLException{
+    public static ArrayList<String> makeQuery(String query, Statement stQuery) throws SQLException{
         ArrayList<String> Result = new ArrayList<String>();
         try{
-            Connection Connection = DriverManager.getConnection(database_path);
-            Statement SQLQuery = Connection.createStatement();
-            ResultSet SQLResultSet = SQLQuery.executeQuery(query);
+            ResultSet SQLResultSet = stQuery.executeQuery(query);
             while(SQLResultSet.next()) {
                 Result.add(SQLResultSet.getString(1));
             }
         } catch(Exception e) {
-            throw new SQLException();
+            throw new SQLException("Could not establish connection to Database:\n" + e);
         }
         return Result;
     }
@@ -130,14 +144,17 @@ public class Functions {
      * @param missingtags   The missing tags for the product
      * @param xmlcon        The xmlstring content as List
      * @return              The modified stringbuilder
+     * @throws SQLException
      */
-    public static StringBuilder addMissingTags(StringBuilder xmlstring, List<String> missingtags, List<String> xmlcon) {
+    public static StringBuilder addMissingTags(StringBuilder xmlstring, List<String> missingtags, List<String> xmlcon) throws SQLException {
         /** List of missing tags, where replaced tags can be deleted from */
         List<String> temp_missing = missingtags;
         /** The identifier of the given book */
         String identifier = getContentByTag("a001", xmlcon);
         /** The ISBN13 of the given book */
         String isbn = getContentByTag("b244", xmlcon);
+        /** Statement for SQL Query execution */
+        Statement ConnectionStat = connectToDatabase(database_path);
         for(String tag : missingtags) {
             String text = "";
             switch (tag) {

@@ -2,6 +2,7 @@ package com.archiving;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -131,7 +132,11 @@ public class Parser {
                             xmlstring.append("\n");
                         }
                     }
-                    xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
+                    try {
+                        xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
+                    } catch (SQLException e) {
+                        //TODO handle error case
+                    }
                 } else {
                     List<String> xmlcon = file.subList(prodindices.get(j)+1, prodindices.get(j+1)-1);
                     List<String> missingTags = Functions.getMissingTags(xmlcon);
@@ -146,7 +151,11 @@ public class Parser {
                             xmlstring.append("\n");
                         }
                     }
-                    xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
+                    try {
+                        xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
+                    } catch (SQLException e) {
+                        //TODO handle error case
+                    }
                 }
                 products.add(xmlstring.toString());
             }
