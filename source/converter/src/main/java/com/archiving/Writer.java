@@ -99,7 +99,7 @@ public class Writer {
                 "<ONIXmessage  release=\"2.1\">\r\n" + //
                 "\t<header>\r\n" + //
                 "\t\t<m174>Verlag Dr. Kovac</m174>\r\n" + //
-                "\t\t<m175>Michael Leu, (+49) 40 39 88 80 - 25</m175>\r\n" + //
+                "\t\t<m175>Michael Leu, (+49) 40 39 88 80 - 25</m175>\r\n" + //         TODO set in Settings Menu
                 "\t\t<m283>info@verlagdrkovac.de</m283>\r\n" + //
                 "\t\t<m182>" + formattedDate + "</m182>\r\n" + //
                 "\t</header>\r\n" + //

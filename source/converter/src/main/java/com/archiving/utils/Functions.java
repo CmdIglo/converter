@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.sql.*;
 
 import com.archiving.Parser;
 
@@ -19,6 +20,8 @@ public class Functions {
     /** The required tags for a ProQuest XML */
     //private static List<String> reqtags = Arrays.asList(Tags.reqTags);
     private static List<String> preftags = Arrays.asList(Tags.tags);
+    /** For Development purposes -> change to a config system */
+    private static String database_path = "jdbc:ucanaccess://C:\\Users\\maxwe\\OneDrive\\Desktop\\Projects\\DB\\ONIX-eBook - ProQuest.accdb";
 
     /**
      * Get the tag of the file line
@@ -26,7 +29,11 @@ public class Functions {
      * @return      The tag of the line
      */
     public static String getTag(String line) {
-        return line.split("<")[1].split(">")[0];
+        if(line != "") {
+            return line.split("<")[1].split(">")[0];
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -46,6 +53,34 @@ public class Functions {
             tags.add(extractedText);
         }
         return tags;
+    }
+
+    /**
+     * Gets content between tags
+     * @param line  The line of which the content is being returned
+     * @return      Content between the tags of the line
+     */
+    public static String getContent(String line) {
+        if(line != "") {
+            return line.split(">")[1].split("<")[0];
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Gets the content of a given tag in a given product
+     * @param tag       The tag of which the content is to be returned
+     * @param xmlcon    The product as list of lines
+     * @return          The content of the given tag
+     */
+    public static String getContentByTag(String tag, List<String> xmlcon) {
+        for(String line : xmlcon) {
+            if(getTag(line).equals(tag)) {
+                return getContent(line);
+            } 
+        }
+        return "";
     }
 
     /**
@@ -70,6 +105,26 @@ public class Functions {
     }
 
     /**
+     * Makes a query to the database
+     * @param query     The SQL query to be executed
+     * @return          Result from DB
+     */
+    public static ArrayList<String> makeQuery(String query) throws SQLException{
+        ArrayList<String> Result = new ArrayList<String>();
+        try{
+            Connection Connection = DriverManager.getConnection(database_path);
+            Statement SQLQuery = Connection.createStatement();
+            ResultSet SQLResultSet = SQLQuery.executeQuery(query);
+            while(SQLResultSet.next()) {
+                Result.add(SQLResultSet.getString(1));
+            }
+        } catch(Exception e) {
+            throw new SQLException();
+        }
+        return Result;
+    }
+
+    /**
      * Add the missing tags to the xmlstring
      * @param xmlstring     The string, where the missing tags content is supposed to be appended to
      * @param missingtags   The missing tags for the product
@@ -79,16 +134,15 @@ public class Functions {
     public static StringBuilder addMissingTags(StringBuilder xmlstring, List<String> missingtags, List<String> xmlcon) {
         /** List of missing tags, where replaced tags can be deleted from */
         List<String> temp_missing = missingtags;
+        /** The identifier of the given book */
+        String identifier = getContentByTag("a001", xmlcon);
+        /** The ISBN13 of the given book */
+        String isbn = getContentByTag("b244", xmlcon);
         for(String tag : missingtags) {
             String text = "";
             switch (tag) {
-                case "a001":    //probably unnecessary ; Eindeutiges Kennzeichen für den Titeldatensatz
-                    String a001 = "";
-                    text = "\t\t<a001>" + a001 + "</a001>\r\n";
-                    xmlstring.append(text);
-                    break;
                 case "a002":    //probably unnecessary ; Kennzeichen für durchzuführende Aktion (01|02 = NEW, 03 = UPDATE, 05 = DELETE)
-                    String a002 = "";
+                    String a002 = "02";
                     text = "\t\t<a002>" + a002 + "</a002>\r\n";
                     xmlstring.append(text);
                     break;
