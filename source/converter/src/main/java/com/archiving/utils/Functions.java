@@ -123,6 +123,7 @@ public class Functions {
     /**
      * Makes a query to the database
      * @param query     The SQL query to be executed
+     * @param stQuery   The statement object from the connection
      * @return          Result from DB
      */
     public static ArrayList<String> makeQuery(String query, Statement stQuery) throws SQLException{
@@ -139,6 +140,35 @@ public class Functions {
     }
 
     /**
+     * Get the ISBN for the given ISBN13
+     * @param isbn13    ISBN13
+     * @param query     Statement for Database Connection
+     * @return          Matching ISBN for given ISBN13
+     */
+    public static String getIsbnFromIsbn13(String isbn13, Statement query) {
+        String result = "";
+        String isbn_str = "'" + isbn13 + "'";
+        String queryString = "SELECT ISBN FROM ISBNzuEISBN WHERE ISBN13 = " + isbn_str;
+        try {
+            result = makeQuery(queryString, query).get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    //TODO Build this function last
+    /**
+     * Validate tags in the product xml 
+     * @param xmlstring     The product as one string
+     * @param xmlcon        The product content as list
+     * @return              The modified stringbuilder
+     */
+    public static StringBuilder validateProduct(StringBuilder xmlstring, List<String> xmlcon) {
+        return xmlstring;
+    }
+
+    /**
      * Add the missing tags to the xmlstring
      * @param xmlstring     The string, where the missing tags content is supposed to be appended to
      * @param missingtags   The missing tags for the product
@@ -148,13 +178,20 @@ public class Functions {
      */
     public static StringBuilder addMissingTags(StringBuilder xmlstring, List<String> missingtags, List<String> xmlcon) throws SQLException {
         /** List of missing tags, where replaced tags can be deleted from */
-        List<String> temp_missing = missingtags;
+        List<String> temp_missing = new ArrayList<String>();
+        temp_missing.addAll(missingtags);
         /** The identifier of the given book */
         String identifier = getContentByTag("a001", xmlcon);
-        /** The ISBN13 of the given book */
-        String isbn = getContentByTag("b244", xmlcon);
         /** Statement for SQL Query execution */
         Statement ConnectionStat = connectToDatabase(database_path);
+        /** The ISBN of the given book */
+        String isbn = getIsbnFromIsbn13(getContentByTag("b244", xmlcon), ConnectionStat);
+        if(isbn != "") {
+            String isbn_str = "'" + isbn + "'";
+            String query_b244 = "SELECT SR FROM Produktion_orig WHERE ISBN = " + isbn_str;
+            String result = makeQuery(query_b244, ConnectionStat).get(0);               //works perfectly
+            String query_b244_2 = "SELECT"; //TODO query for other series info
+        }
         for(String tag : missingtags) {
             String text = "";
             switch (tag) {
@@ -166,14 +203,16 @@ public class Functions {
                 case "productidentifier":       //kann mehrfach vorkommen, wird mindestens einmal mit ISBN13-Angabe erwartet (optional: EAN, ISBN10) 
                     String b221_pi = "";        //15 (ISBN13) oder EAN oder ISBN10 oder alles
                     String b244_pi = "";        //ISBN13-/EAN-/ISBN10-Wert 
-                    text = "\t\t<productidentifier>\r\n" + //
-                           "\t\t\t<b221>" + b221_pi + "</b221>\r\n" + //
-                           "\t\t\t<b244>" + b244_pi + "</b244>\r\n" + //
+                    text = "\t\t<productidentifier>\r\n" + 
+                           "\t\t\t<b221>" + b221_pi + "</b221>\r\n" + 
+                           "\t\t\t<b244>" + b244_pi + "</b244>\r\n" + 
                            "\t\t</productidentifier>\r\n";
                     temp_missing.remove("productidentifier");
                     xmlstring.append(text);
                     break;
                 case "series":
+                    String query_b203 = "";
+                    String query_b018 = "";
                     String b273_ser = "04";       //01 (proprietär), 02 (ISSN-basiert) oder 04 (VLB-Systematik) (-> see TODO)
                     String b244_ser = "";         //Reihen-ID 
                     String b202_ser = "01";       //01 (Haupttitel)
