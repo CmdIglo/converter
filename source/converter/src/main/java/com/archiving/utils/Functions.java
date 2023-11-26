@@ -263,6 +263,16 @@ public class Functions {
         return result;
     }
 
+    /**
+     * Make a list-representation of template string
+     * @param template      Template as string
+     * @return              Template as List
+     */
+    public static ArrayList<String> buildTempList(String template) {
+        String[] result = template.split("\r\n");
+        return new ArrayList<String>(Arrays.asList(result));
+    }
+
     //TODO Build this function last
     /**
      * Validate tags in the product xml 
