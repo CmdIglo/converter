@@ -74,6 +74,10 @@ public class Writer {
                     }                    
                     File BookfIle = new File(target + "\\books\\" + prodId);
                     BufferedWriter writer = new BufferedWriter(new FileWriter(BookfIle, false));
+                    BufferedWriter logger = new BufferedWriter(new FileWriter("log.txt", true));
+                    logger.append("\n");
+                    logger.append(buildXML(elem));
+                    logger.close();
                     writer.append("\n");
                     writer.append(buildXML(elem));
                     writer.close();

@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.plaf.synth.SynthSplitPaneUI;
+
 import java.sql.*;
 
 import com.archiving.Parser;
@@ -27,10 +30,6 @@ public class Functions {
          "\t\t<a002>02</a002>\r\n" + //
          "\t\t<productidentifier>\r\n" + //
          "\t\t\t<b221>15</b221>\r\n" + //
-         "\t\t\t<b244></b244>\r\n" + //
-         "\t\t</productidentifier>\r\n" + //
-         "\t\t<productidentifier>\r\n" + //
-         "\t\t\t<b221></b221>\r\n" + //
          "\t\t\t<b244></b244>\r\n" + //
          "\t\t</productidentifier>\r\n" + //
          "\t\t<productidentifier>\r\n" + //
@@ -127,6 +126,8 @@ public class Functions {
          "\t\t\t</price>\r\n" + //
          "\t\t</supplydetail>\r\n";
 
+    private static ArrayList<String> templateList = buildTempList(xml);
+
 
     /**
      * Get the tag of the file line
@@ -134,8 +135,13 @@ public class Functions {
      * @return      The tag of the line
      */
     public static String getTag(String line) {
-        if(line != "") {
-            return line.split("<")[1].split(">")[0];
+       if(line != "") {
+            String[] temp = line.split("<")[1].split(">");
+            if(temp.length > 0) {
+                return temp[0];
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
@@ -167,10 +173,24 @@ public class Functions {
      */
     public static String getContent(String line) {
         if(line != "") {
-            return line.split(">")[1].split("<")[0];
+            String[] temp = line.split(">")[1].split("<");
+            if(temp.length > 0) {
+                return temp[0];
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
+    }
+
+    /**
+     * Gets the format of the line (necessary to determine on which level of the dom tree the tag is)
+     * @param line      Line of which the level is being determined
+     * @return          Format of the line (Format in front of the opening tag)
+     */
+    public static String getFormat(String line) {
+        return line.split("<")[0];    
     }
 
     /**
@@ -186,6 +206,19 @@ public class Functions {
             } 
         }
         return "";
+    }
+
+    /**
+     * Sets the content for a tag in the line
+     * @param line          Line for which the content is being set
+     * @param content       Content for the line
+     * @return              The line with the content between the tags
+     */
+    public static String setContentBtwTags(String line, String content) {
+        String line_beg = line.split("</")[0];
+        String line_end = line.split(">")[1];
+        String newLine = line_beg + content + line_end;
+        return newLine;
     }
 
     /**
@@ -307,9 +340,20 @@ public class Functions {
             String query_b244 = "SELECT SR FROM Produktion_orig WHERE ISBN = " + isbn_str;
             ArrayList<String> result = makeQuery(query_b244, ConnectionStat);
             String resultstr = result.size() > 0 ? result.get(0) : "";               //works perfectly
-            String query_b244_2 = "SELECT"; //TODO query for other series info
         }
-        
+        for(int i = 0; i < templateList.size(); i++) {
+            for(int j = 0; j < xmlcon.size(); j++) {
+                if((getTag(templateList.get(i)).equals(getTag(xmlcon.get(j)))) && (getFormat(templateList.get(i)).equals(getFormat(xmlcon.get(j)))) && (getContent(templateList.get(i)).equals(""))) {
+                    System.out.println("rein geschafft");
+                    templateList.set(i, setContentBtwTags(templateList.get(i), getContent(xmlcon.get(j))));
+                }
+            }
+        }
+        StringBuilder Product = new StringBuilder();
+        for(String line : templateList) {
+            Product.append(line);
+            Product.append("\n");
+        } 
         return xmlstring;
     }
 
