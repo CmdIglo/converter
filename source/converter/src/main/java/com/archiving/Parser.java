@@ -121,21 +121,21 @@ public class Parser {
                 if(j == (prodindices.size() - 1)) {
                     List<String> xmlcon = file.subList(prodindices.get(j)+1, file.size()-2);
                     //xmlstring as list
-                    List<String> newCon = new ArrayList<String>();
+                    //List<String> newCon = new ArrayList<String>();
                     List<String> missingTags = Functions.getMissingTags(xmlcon);
-                    for(String elem : xmlcon) {
-                        if(elem.contains("<b012>")) {
-                            String format = elem.split("<b012>")[0];                                          //tabs and spaces
-                            String newLine = format + "<b012>DG</b012>" + "\n" + format + "<b211>02</b211>";        //formatting of b211 based on the format of b012 -> same indentation
-                            newCon.add(newLine);
-                            xmlstring.append(newLine);
-                            xmlstring.append("\n");
-                        } else {
-                            newCon.add(elem);
-                            xmlstring.append(elem);
-                            xmlstring.append("\n");
-                        }
-                    }
+                    //for(String elem : xmlcon) {
+                    //    if(elem.contains("<b012>")) {
+                    //        String format = elem.split("<b012>")[0];                                          //tabs and spaces
+                    //        String newLine = format + "<b012>DG</b012>" + "\n" + format + "<b211>02</b211>";        //formatting of b211 based on the format of b012 -> same indentation
+                    //        newCon.add(newLine);
+                    //        xmlstring.append(newLine);
+                    //        xmlstring.append("\n");
+                    //    } else {
+                    //        newCon.add(elem);
+                    //        xmlstring.append(elem);
+                    //        xmlstring.append("\n");
+                    //    }
+                    //}
                     try {
                         xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
                     } catch (SQLException e) {
@@ -144,21 +144,21 @@ public class Parser {
                 } else {
                     List<String> xmlcon = file.subList(prodindices.get(j)+1, prodindices.get(j+1)-1);
                     //xmlstring as list
-                    List<String> newCon = new ArrayList<String>();
+                    //List<String> newCon = new ArrayList<String>();
                     List<String> missingTags = Functions.getMissingTags(xmlcon);
-                    for(String elem : xmlcon) {
-                        if(elem.contains("<b012>")) {
-                            String format = elem.split("<b012>")[0];                                          //tabs and spaces
-                            String newLine = format + "<b012>DG</b012>" + "\n" + format + "<b211>02</b211>";        //formatting of b211 based on the format of b012 -> same indentation
-                            newCon.add(newLine);
-                            xmlstring.append(newLine);
-                            xmlstring.append("\n");
-                        } else {
-                            newCon.add(elem);
-                            xmlstring.append(elem);
-                            xmlstring.append("\n");
-                        }
-                    }
+                    //for(String elem : xmlcon) {
+                    //    if(elem.contains("<b012>")) {
+                    //        String format = elem.split("<b012>")[0];                                          //tabs and spaces
+                    //        String newLine = format + "<b012>DG</b012>" + "\n" + format + "<b211>02</b211>";        //formatting of b211 based on the format of b012 -> same indentation
+                    //        newCon.add(newLine);
+                    //        xmlstring.append(newLine);
+                    //        xmlstring.append("\n");
+                    //    } else {
+                    //        newCon.add(elem);
+                    //        xmlstring.append(elem);
+                    //        xmlstring.append("\n");
+                    //    }
+                    //}
                     try {
                         xmlstring = Functions.addMissingTags(xmlstring, missingTags, xmlcon);
                     } catch (SQLException e) {

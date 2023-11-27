@@ -172,7 +172,11 @@ public class Functions {
      * @return      Content between the tags of the line
      */
     public static String getContent(String line) {
-        if(line != "") {
+        char[] lineArr = new char[line.length()];
+        for(int i = 0; i < line.toCharArray().length; i++) {
+            lineArr[i] = line.toCharArray()[i];
+        }
+        if((line != "") && (hasValue(lineArr, '/')) && (countOcc(lineArr, '<') == 2)) {              //check if line has a closing tag
             String[] temp = line.split(">")[1].split("<");
             if(temp.length > 0) {
                 return temp[0];
@@ -182,6 +186,37 @@ public class Functions {
         } else {
             return "";
         }
+    }
+
+    /**
+     * Checks if a given char array has the given value
+     * @param string    Char Array
+     * @param chr       Character 
+     * @return          True or False, if value in string
+     */
+    public static boolean hasValue(char[] string, char chr) {
+        for(char elem : string) {
+            if(elem == chr) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Counts occurences of given character in given string
+     * @param string    String
+     * @param chr       Character to be counted
+     * @return          Number of occurences
+     */
+    public static int countOcc(char[] string, char chr) {
+        int occ = 0;
+        for(char c : string) {
+            if(c == chr) {
+                occ++;
+            }
+        }
+        return occ;
     }
 
     /**
@@ -326,34 +361,34 @@ public class Functions {
      * @throws SQLException
      */
     public static StringBuilder addMissingTags(StringBuilder xmlstring, List<String> missingtags, List<String> xmlcon) throws SQLException {
-        /** List of missing tags, where replaced tags can be deleted from */
-        List<String> temp_missing = new ArrayList<String>();
-        temp_missing.addAll(missingtags);
         /** The identifier of the given book */
         String identifier = getContentByTag("a001", xmlcon);
         /** Statement for SQL Query execution */
-        Statement ConnectionStat = connectToDatabase(database_path);
+        //Statement ConnectionStat = connectToDatabase(database_path);
         /** The ISBN of the given book */
-        String isbn = getIsbnFromIsbn13(getContentByTag("b244", xmlcon), ConnectionStat);
-        if(isbn != "") {
-            String isbn_str = "'" + isbn + "'";
-            String query_b244 = "SELECT SR FROM Produktion_orig WHERE ISBN = " + isbn_str;
-            ArrayList<String> result = makeQuery(query_b244, ConnectionStat);
-            String resultstr = result.size() > 0 ? result.get(0) : "";               //works perfectly
-        }
+        //String isbn = getIsbnFromIsbn13(getContentByTag("b244", xmlcon), ConnectionStat);
+        //if(isbn != "") {
+        //    String isbn_str = "'" + isbn + "'";
+        //    String query_b244 = "SELECT SR FROM Produktion_orig WHERE ISBN = " + isbn_str;
+        //    ArrayList<String> result = makeQuery(query_b244, ConnectionStat);
+        //    String resultstr = result.size() > 0 ? result.get(0) : "";               //works perfectly
+        //}
         for(int i = 0; i < templateList.size(); i++) {
-            for(int j = 0; j < xmlcon.size(); j++) {
-                if((getTag(templateList.get(i)).equals(getTag(xmlcon.get(j)))) && (getFormat(templateList.get(i)).equals(getFormat(xmlcon.get(j)))) && (getContent(templateList.get(i)).equals(""))) {
-                    System.out.println("rein geschafft");
-                    templateList.set(i, setContentBtwTags(templateList.get(i), getContent(xmlcon.get(j))));
+            String tempLine = templateList.get(i);
+            if(countOcc(tempLine.toCharArray(), '<') == 2) {
+                for(int j = 0; j < xmlcon.size(); j++) {
+                    String xmlLine = xmlcon.get(j);
+                    if((countOcc(xmlLine.toCharArray(), '<') == 2) && (getTag(tempLine).equals(getTag(xmlLine))) && (getFormat(tempLine).equals(getFormat(xmlLine)))) {
+                        templateList.set(i, setContentBtwTags(tempLine, getContent(xmlLine)));
+                    } 
                 }
-            }
+            } 
         }
-        StringBuilder Product = new StringBuilder();
-        for(String line : templateList) {
-            Product.append(line);
-            Product.append("\n");
-        } 
+        //StringBuilder Product = new StringBuilder();
+        //for(String line : templateList) {
+        //    Product.append(line);
+        //    Product.append("\n");
+        //} 
         return xmlstring;
     }
 
